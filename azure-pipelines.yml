@@ -1,0 +1,28 @@
+pool:
+  name: Hosted VS2017
+  demands: npm
+
+steps:
+- task: Npm@1
+  displayName: 'npm install'
+  inputs:
+    verbose: true
+
+- task: Npm@1
+  displayName: 'npm custom'
+  inputs:
+    command: custom
+    verbose: true
+    customCommand: 'run build'
+
+- task: ArchiveFiles@2
+  displayName: 'Archive TestProject'
+  inputs:
+    rootFolderOrFile: '$(System.DefaultWorkingDirectory)/build'
+    includeRootFolder: false
+    archiveFile: '$(Build.ArtifactStagingDirectory)/build.zip'
+
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish Artifact: appdrop'
+  inputs:
+    ArtifactName: appdrop
